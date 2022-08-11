@@ -1,0 +1,13 @@
+spring:
+  datasource:
+    username: postgres
+    password: qwerty
+    url: jdbc:postgresql://localhost:5432/postgres
+  jpa:
+    database: postgresql
+    hibernate:
+      ddl-auto: update
+jwt:
+  token:
+    secret: soymun
+    validate: 3600000
