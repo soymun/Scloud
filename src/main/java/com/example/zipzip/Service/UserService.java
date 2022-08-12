@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class UserService implements UserDetailsService {
 
-    private UserRepo userRepo;
+    private final UserRepo userRepo;
 
     @Autowired
     public UserService(UserRepo userRepo) {
@@ -31,5 +31,15 @@ public class UserService implements UserDetailsService {
 
 
         return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), user.getRole());
+    }
+
+    @Transactional
+    public void save(User user){
+        userRepo.save(user);
+    }
+
+    @Transactional
+    public User findUserByEmail(String email){
+        return userRepo.findUserByEmail(email);
     }
 }

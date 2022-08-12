@@ -25,7 +25,7 @@ public class JwtTokenProvider {
     @Value("${jwt.token.validate}")
     private Long validateInMillisecond;
 
-    private UserService userService;
+    private final UserService userService;
 
     @Autowired
     public JwtTokenProvider(UserService userService) {
