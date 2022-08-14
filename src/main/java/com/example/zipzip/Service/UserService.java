@@ -42,4 +42,15 @@ public class UserService implements UserDetailsService {
     public User findUserByEmail(String email){
         return userRepo.findUserByEmail(email);
     }
+
+    @Transactional
+    public User findUserById(Long id){
+        return userRepo.findUserById(id);
+    }
+
+    @Transactional
+    public void saveFilm(User user){
+        userRepo.flush();
+        userRepo.save(user);
+    }
 }

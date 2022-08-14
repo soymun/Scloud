@@ -7,6 +7,7 @@ spring:
     database: postgresql
     hibernate:
       ddl-auto: update
+    show-sql: true
 jwt:
   token:
     secret: soymun

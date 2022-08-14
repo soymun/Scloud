@@ -25,7 +25,13 @@ public class User {
     @Enumerated(EnumType.ORDINAL)
     private List<Role> role;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "file_id")
     private List<File> files;
+
+    public void saveFile(String url){
+        File file = new File();
+        file.setUrl(url);
+        files.add(file);
+    }
 }
