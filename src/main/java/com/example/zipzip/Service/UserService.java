@@ -53,4 +53,10 @@ public class UserService implements UserDetailsService {
         userRepo.flush();
         userRepo.save(user);
     }
+
+    @Transactional
+    public boolean findFilm(String url, Long id){
+        User user = userRepo.findUserById(id);
+        return user.getFiles().stream().filter(n -> n.getUrl().equals(url)).count() == 1;
+    }
 }

@@ -19,9 +19,9 @@ import java.nio.file.Paths;
 @RestController
 public class FileController {
 
-    private UserService userService;
+    private final UserService userService;
 
-    private String url = "D:\\IdeaProject\\zipzip\\src\\main\\file\\";
+    private final String url = "D:\\IdeaProject\\zipzip\\src\\main\\file\\";
     @Autowired
     public FileController(UserService userService) {
         this.userService = userService;
@@ -47,6 +47,9 @@ public class FileController {
 
     @GetMapping("/download")
     public void getFiles(HttpServletRequest request, HttpServletResponse response, @RequestBody FileDTO fileDTO) throws IOException {
+        if(!userService.findFilm(url + fileDTO.getNameFile(), fileDTO.getUser())){
+            return;
+        }
         File file = new File(url + fileDTO.getNameFile());
         String mimeType = URLConnection.guessContentTypeFromName(file.getName());
         response.setContentType(mimeType);
