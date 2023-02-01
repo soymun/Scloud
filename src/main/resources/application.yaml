@@ -12,3 +12,5 @@ jwt:
   token:
     secret: soymun
     validate: 3600000
+toFile:
+  url: src/main/resources/files/

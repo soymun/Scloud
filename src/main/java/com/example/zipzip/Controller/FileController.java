@@ -3,7 +3,7 @@ package com.example.zipzip.Controller;
 
 import com.example.zipzip.DTO.FileDTO;
 import com.example.zipzip.Entity.User;
-import com.example.zipzip.Service.UserService;
+import com.example.zipzip.Service.Impl.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
@@ -32,9 +32,7 @@ public class FileController {
         File file1 = new File(url + file.getOriginalFilename());
         if(file1.createNewFile()){
             file.transferTo(file1);
-            User user = userService.findUserById(id);
-            user.saveFile(file1.getPath());
-            userService.save(user);
+
         }
         else {
             BufferedWriter writer = Files.newBufferedWriter(Paths.get(url + file.getOriginalFilename()));
@@ -45,11 +43,10 @@ public class FileController {
         return "Suggest";
     }
 
-    @GetMapping("/download")
+
+
+    @PostMapping("/download")
     public void getFiles(HttpServletRequest request, HttpServletResponse response, @RequestBody FileDTO fileDTO) throws IOException {
-        if(!userService.findFilm(url + fileDTO.getNameFile(), fileDTO.getUser())){
-            return;
-        }
         File file = new File(url + fileDTO.getNameFile());
         String mimeType = URLConnection.guessContentTypeFromName(file.getName());
         response.setContentType(mimeType);

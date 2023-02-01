@@ -1,20 +1,33 @@
 package com.example.zipzip.Entity;
 
 
-import lombok.Data;
+import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class File {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String url;
+    private String nameFile;
+
+    private String urlToFile;
+
+    private Type type;
+
+    @Column(name = "userId")
+    private Long userId;
+
+    @ManyToOne
+    @JoinColumn(name = "userId", insertable = false, updatable = false)
+    private User user;
+
+    private Long size;
 }

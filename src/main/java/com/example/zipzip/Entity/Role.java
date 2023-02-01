@@ -1,18 +1,22 @@
 package com.example.zipzip.Entity;
 
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-public enum Role implements GrantedAuthority {
-    USER("USER");
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
-    String role;
+public enum Role {
+    USER(Set.of(Permitions.USER)), ADMIN(Set.of(Permitions.USER, Permitions.ADMIN));
 
-    Role(String user) {
-        role = user;
+    final Set<Permitions> sp;
+
+    Role(Set<Permitions> sp) {
+        this.sp = sp;
     }
 
-    @Override
-    public String getAuthority() {
-        return role;
+    public List<SimpleGrantedAuthority> authorities(){
+        return sp.stream().map(Permitions::getP).map(SimpleGrantedAuthority::new).collect(Collectors.toList());
     }
 }

@@ -1,7 +1,7 @@
 package com.example.zipzip.Jwt;
 
 import com.example.zipzip.Entity.Role;
-import com.example.zipzip.Service.UserService;
+import com.example.zipzip.Service.Impl.UserService;
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -39,7 +39,7 @@ public class JwtTokenProvider {
 
     public String createToken(String email, Role role){
         Claims claims = Jwts.claims().setSubject(email);
-        claims.put("role", role.getAuthority());
+        claims.put("role", role);
 
         Date issue = new Date();
         Date ex = new Date(validateInMillisecond + issue.getTime());
@@ -63,7 +63,7 @@ public class JwtTokenProvider {
     public String resolveToken(HttpServletRequest request){
         String bearer = request.getHeader("Authorization");
         if(bearer != null && bearer.startsWith("Bearer ")){
-            return bearer.substring(7, bearer.length());
+            return bearer.substring(7);
         }
         return null;
     }
@@ -71,13 +71,10 @@ public class JwtTokenProvider {
     public boolean validateToken(String token){
         try {
             Jws<Claims> claimsJws = Jwts.parser().setSigningKey(secret).parseClaimsJws(token);
-            if(claimsJws.getBody().getExpiration().before(new Date())){
-                return false;
-            }
-            return true;
+            return !claimsJws.getBody().getExpiration().before(new Date());
         }
         catch (AuthenticationException e){
-            throw new RuntimeException("Token invalid");
+            return false;
         }
     }
 }
