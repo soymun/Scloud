@@ -1,27 +1,13 @@
 package com.example.zipzip.Controller;
 
 
-import com.example.zipzip.DTO.LogoutDTO;
 import com.example.zipzip.DTO.RegDTO;
-import com.example.zipzip.Entity.Role;
-import com.example.zipzip.Entity.User;
 import com.example.zipzip.Facade.AuthFacade;
-import com.example.zipzip.Jwt.JwtTokenProvider;
-import com.example.zipzip.Service.Impl.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
-import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class AuthController {
@@ -33,7 +19,7 @@ public class AuthController {
     }
 
     @PostMapping("/registration")
-    public ResponseEntity<String> registration(@RequestBody RegDTO regDTO){
+    public ResponseEntity<?> registration(@RequestBody RegDTO regDTO){
         return authFacade.registration(regDTO);
     }
 
@@ -46,5 +32,4 @@ public class AuthController {
     public ResponseEntity<?> registrationAdmin(@PathVariable Long id){
         return authFacade.registrationAdmin(id);
     }
-
 }

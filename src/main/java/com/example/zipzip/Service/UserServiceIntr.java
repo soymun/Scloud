@@ -12,5 +12,7 @@ public interface UserServiceIntr extends UserDetailsService {
 
     UserDto findUserById(Long id);
 
-    User getUserToUpdate(Long id);
+    UserDto patchUser(User user);
+
+    void deleteUserById(Long id);
 }

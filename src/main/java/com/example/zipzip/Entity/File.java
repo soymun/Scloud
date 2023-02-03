@@ -30,4 +30,12 @@ public class File {
     private User user;
 
     private Long size;
+
+
+    @Column(name = "fileId")
+    private Long fileId;
+
+    @ManyToOne
+    @JoinColumn(name = "fileId", insertable = false, updatable = false)
+    private  File file;
 }

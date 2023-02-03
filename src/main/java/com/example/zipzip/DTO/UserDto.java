@@ -13,4 +13,6 @@ public class UserDto {
     private Role role;
 
     private Long maxSize;
+
+    private Long freeSize;
 }

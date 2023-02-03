@@ -73,7 +73,7 @@ public class JwtTokenProvider {
             Jws<Claims> claimsJws = Jwts.parser().setSigningKey(secret).parseClaimsJws(token);
             return !claimsJws.getBody().getExpiration().before(new Date());
         }
-        catch (AuthenticationException e){
+        catch (Exception e){
             return false;
         }
     }
