@@ -2,18 +2,19 @@ package com.example.zipzip.Service.Impl;
 
 import com.example.zipzip.DTO.FileDTO;
 import com.example.zipzip.Entity.Type;
+import com.example.zipzip.Entity.User;
 import com.example.zipzip.Mappers.FileMapper;
 import com.example.zipzip.Repo.FileRepo;
+import com.example.zipzip.Repo.UserRepo;
 import com.example.zipzip.Service.FileServiceInt;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.PersistenceContextType;
 import java.io.File;
-import java.util.Arrays;
-import java.util.Objects;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -22,11 +23,14 @@ public class FileService implements FileServiceInt {
     @Value("${toFile.url}")
     private String url;
 
+    private final UserRepo userRepo;
+
     private final FileMapper fileMapper;
 
     private final FileRepo fileRepo;
 
-    public FileService(FileMapper fileMapper, FileRepo fileRepo) {
+    public FileService(UserRepo userRepo, FileMapper fileMapper, FileRepo fileRepo) {
+        this.userRepo = userRepo;
         this.fileMapper = fileMapper;
         this.fileRepo = fileRepo;
     }
@@ -44,10 +48,10 @@ public class FileService implements FileServiceInt {
         FileDTO fileDTO;
         if(urlToFile.contains("\\")) {
             String str = urlToFile.substring(0, urlToFile.lastIndexOf('\\'));
-            fileDTO = new FileDTO(name, urlToFile, Type.FOLDER, userId, file.getTotalSpace(), fileRepo.getFileByUrlToFileAndType(str, Type.FOLDER).getId());
+            fileDTO = new FileDTO(name, urlToFile, Type.FOLDER, userId, 0L, fileRepo.getFileByUrlToFileAndType(str, Type.FOLDER).getId());
         }
         else {
-            fileDTO = new FileDTO(name, urlToFile, Type.FOLDER, userId, file.getTotalSpace(), null);
+            fileDTO = new FileDTO(name, urlToFile, Type.FOLDER, userId, 0L, null);
         }
         saveFile(fileDTO);
     }
@@ -68,6 +72,9 @@ public class FileService implements FileServiceInt {
         com.example.zipzip.Entity.File file = fileRepo.getFileById(id).orElseThrow(() -> {throw new RuntimeException("Файл не нвйден");});
         File file1 = new File(url + file.getUrlToFile());
         if(file1.delete()){
+            User user = userRepo.findUserById(file.getUserId()).orElseThrow(() -> {throw new RuntimeException("Пользователь не найден");});
+            user.setFreeSize(user.getFreeSize()+file.getSize());
+            userRepo.save(user);
             fileRepo.deleteById(id);
         }
     }
@@ -92,5 +99,10 @@ public class FileService implements FileServiceInt {
     @Override
     public FileDTO getFileByUrlToFile(String urlToFile, Type type) {
         return fileMapper.fileToFileDto(fileRepo.getFileByUrlToFileAndType(urlToFile, type));
+    }
+
+    @Override
+    public List<FileDTO> getFileDtoByUserIdAndFileId(Long userId, Long fileId) {
+        return fileRepo.getFileByUserIdAndFileId(userId, fileId).stream().map(fileMapper::fileToFileDto).collect(Collectors.toList());
     }
 }

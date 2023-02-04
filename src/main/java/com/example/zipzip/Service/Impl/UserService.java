@@ -67,7 +67,10 @@ public class UserService implements UserServiceIntr {
             user1.setRole(user.getRole());
         }
         if(user.getMaxSize() != null){
-            user1.setMaxSize(user.getMaxSize());
+            user1.setMaxSize(user.getMaxSize()+(user1.getMaxSize()-user1.getFreeSize()));
+        }
+        if(user.getFreeSize() != null){
+            user1.setFreeSize(user.getFreeSize());
         }
         return userMappers.userToUserDto(userRepo.save(user1));
     }

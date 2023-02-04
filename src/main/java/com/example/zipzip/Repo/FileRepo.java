@@ -12,8 +12,7 @@ public interface FileRepo extends JpaRepository<File, Long> {
 
     Optional<File> getFileById(Long id);
 
-    @Transactional
-    void deleteByUrlToFile(String urlToFile);
+    List<File> getFileByUserIdAndFileId(Long userId, Long fileId);
 
     File getFileByUrlToFileAndType(String urlToFile, Type type);
 
