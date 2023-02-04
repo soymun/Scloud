@@ -58,17 +58,20 @@ public class FileService implements FileServiceInt {
 
     @Override
     public void saveFile(FileDTO fileDTO) {
+        log.info("Сохранение файла {}", fileDTO.getNameFile());
         fileRepo.save(fileMapper.fileDtoToFile(fileDTO));
     }
 
     @Override
     public FileDTO getFileById(Long id) {
+        log.info("Выдача файла {}", id);
         return fileMapper.fileToFileDto(fileRepo.getFileById(id).orElseThrow(() -> {throw new RuntimeException("Файл не найден");}));
     }
 
     @Override
     @Transactional
     public void deleteFile(Long id) {
+        log.info("Удаление файла {}", id);
         com.example.zipzip.Entity.File file = fileRepo.getFileById(id).orElseThrow(() -> {throw new RuntimeException("Файл не нвйден");});
         File file1 = new File(url + file.getUrlToFile());
         if(file1.delete()){
@@ -82,6 +85,7 @@ public class FileService implements FileServiceInt {
     @Override
     @Transactional
     public void deleteDir(Long id) {
+        log.info("Удаление папки {}", id);
         File file1 = new File(url + fileRepo.getFileById(id).orElseThrow(() -> {throw new RuntimeException("Папки не существует");}).getUrlToFile());
         if(!file1.delete()){
             fileRepo.getFileByFileId(id).forEach(n -> {
@@ -98,11 +102,13 @@ public class FileService implements FileServiceInt {
 
     @Override
     public FileDTO getFileByUrlToFile(String urlToFile, Type type) {
+        log.info("Выдача файлов по url");
         return fileMapper.fileToFileDto(fileRepo.getFileByUrlToFileAndType(urlToFile, type));
     }
 
     @Override
     public List<FileDTO> getFileDtoByUserIdAndFileId(Long userId, Long fileId) {
+        log.info("Выдача файлов в папке {}", fileRepo);
         return fileRepo.getFileByUserIdAndFileId(userId, fileId).stream().map(fileMapper::fileToFileDto).collect(Collectors.toList());
     }
 }

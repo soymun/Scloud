@@ -1,0 +1,30 @@
+<configuration scan="true" scanPeriod="60 seconds" debug="true" >
+    <appender name="FILE-APP" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!--   <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+               <level>INFO</level>
+           </filter>-->
+        <file>logs/app.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>logs/app.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxFileSize>200MB</maxFileSize>
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>2GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>[%date] [%thread] [%-5level] [%X{session-id}] [%X{request-id}] [%X{remote-host}] [%X{request-url}] [%X{request-timer}] [%logger{35}] [%msg]%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <layout>
+            <Pattern>%-4r [%thread] %-5level Url:%X{request-url} UserId:%X{user-id} UserLogin:%X{user-login} Request:%X{request-id} - %msg%n</Pattern>
+        </layout>
+    </appender>
+
+    <root level="debug">
+        <appender-ref ref="FILE-APP"/>
+        <appender-ref ref="CONSOLE"/>
+    </root>
+
+
+</configuration>
